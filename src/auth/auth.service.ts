@@ -16,12 +16,11 @@ export class AuthService {
         pwInput: string,
         fullName: string,
     ) : Promise<User> {
-        const salt = await bcrypt.genSalt();
-        const password = await bcrypt.hash(pwInput, salt);
+        const password = await bcrypt.hash(pwInput, 10);
         return await this.userService.create({
             fullName,
             email,
-            password,
+            password
         }); 
     }
 
@@ -34,8 +33,7 @@ export class AuthService {
         if(!user)
             throw new NotFoundException();
 
-        const password = pwInput+user.salt;
-        const isMatch = await bcrypt.compare(user?.password, password)
+        const isMatch = await bcrypt.compare(pwInput, user.password)
 
         if(!isMatch) {
             throw new UnauthorizedException();
