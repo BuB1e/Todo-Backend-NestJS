@@ -13,7 +13,9 @@ async function bootstrap() {
     .addTag('Tasks')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('swagger', app, documentFactory, {
+    jsonDocumentUrl: 'swagger/json',
+  });
 
   app.useGlobalPipes(new ValidationPipe());
 
