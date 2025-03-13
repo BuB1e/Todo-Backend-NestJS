@@ -12,9 +12,9 @@ export class AuthService {
     ) {}
 
     async signUp(
+        fullName: string,
         email: string,
         pwInput: string,
-        fullName: string,
     ) : Promise<User> {
         const password = await bcrypt.hash(pwInput, 10);
         return await this.userService.create({

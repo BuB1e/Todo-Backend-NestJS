@@ -24,18 +24,18 @@ export class TasksService {
   }
 
   async findOne(id: number) {
-    return await this.taskRepository.find({
+    return await this.taskRepository.findOne({
       where : { id }
     });
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto) {
-    const task = await this.taskRepository.find({
+    const task = await this.taskRepository.findOne({
       where : { id }
     });
 
     if(!task) { 
-      throw new NotFoundException();
+      throw new NotFoundException(`Task with ID ${id} not found`);
     }
 
     Object.assign(task, updateTaskDto)
@@ -44,12 +44,12 @@ export class TasksService {
   }
 
   async remove(id: number) {
-    const task = await this.taskRepository.find({
+    const task = await this.taskRepository.findOne({
       where : { id }
     });
 
     if(!task) { 
-      throw new NotFoundException();
+      throw new NotFoundException(`Task with ID ${id} not found`);
     }
 
     return await this.taskRepository.remove(task);
