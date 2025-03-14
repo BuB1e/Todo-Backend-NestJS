@@ -14,13 +14,21 @@ export class TasksService {
 
   }
 
-  async create(createTaskDto: CreateTaskDto) {
-    const task = this.taskRepository.create(createTaskDto);
-    return await this.taskRepository.save(task);
-  }
+  async create(createTaskDto: CreateTaskDto, userId: number): Promise<Task> {
+    const task = this.taskRepository.create({
+        ...createTaskDto,
+        userId
+    });
 
-  async findAll() {
-    return await this.taskRepository.find();
+    return await this.taskRepository.save(task);
+}
+
+  async findAll(userId: number) {
+    return await this.taskRepository.find({
+      where : {
+        userId
+      }
+    });
   }
 
   async findOne(id: number) {

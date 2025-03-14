@@ -1,22 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Request } from 'express';
 
+interface AuthenticatedRequest extends Request {
+  user: { id: number; email: string }; // Adjust based on your JWT payload
+}
+
+@ApiBearerAuth()
 @UseGuards(AuthGuard)
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  create(@Req() req: AuthenticatedRequest, @Body() createTaskDto: CreateTaskDto) {
+    return this.tasksService.create(createTaskDto, req.user.id);
   }
 
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(@Req() req: AuthenticatedRequest) {
+    return this.tasksService.findAll(req.user.id);
   }
 
   @Get(':id')
@@ -34,3 +41,4 @@ export class TasksController {
     return this.tasksService.remove(+id);
   }
 }
+

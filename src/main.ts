@@ -11,6 +11,7 @@ async function bootstrap() {
     .setDescription('The Tasks API description')
     .setVersion('1.0')
     .addTag('Tasks')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory, {
